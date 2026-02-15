@@ -1,18 +1,21 @@
 import os
 
+# Define paths
+SECRET_PATHS = {
+    "GEMINI_KEY": r"/home/kailasha/Development/llm_assist/.secret/gemini.txt",
+    "GROQ_KEY": r"/home/kailasha/Development/llm_assist/.secret/groq.txt",
+    "MISTRAL_KEY": r"/home/kailasha/Development/llm_assist/.secret/mistral.txt"
+}
 
-gemini_key:str = r"/home/kailasha/Development/llm_assist/.secret/gemini.txt"
-groq_key:str = r"/home/kailasha/Development/llm_assist/.secret/groq.txt"
-mistral_key:str = r"/home/kailasha/Development/llm_assist/.secret/mistral.txt"
+def load_keys():
+    for env_var, path in SECRET_PATHS.items():
+        try:
+            with open(path, "r") as f:
+                os.environ[env_var] = f.read().strip()
+        except FileNotFoundError:
+            print(f"Warning: Secret file not found at {path}")
+        except Exception as e:
+            print(f"Error loading {env_var}: {e}")
 
-with open(gemini_key, "r") as f:
-    gemini_key = f.read().strip()
-    os.environ["GEMINI_KEY"] = gemini_key
-
-with open(groq_key, "r") as f:
-    groq_key = f.read().strip()
-    os.environ["GROQ_KEY"] = groq_key
-
-with open(mistral_key, "r") as f:
-    mistral_key = f.read().strip()
-    os.environ["MISTRAL_KEY"] = mistral_key
+# Execute loading
+load_keys()
